@@ -14,14 +14,29 @@ namespace ImageCenterFinder.ViewModel
 {
     class MainWindowViewModel : BindableBase, IMouseCaptureProxy
     {
+        private int _currentTab;
+        public int CurrentTab
+        {
+            get { return _currentTab; }
+            set { SetProperty(ref _currentTab, value); }
+        }
+
         public CommandBase LoadImageCommand { get; private set; }
         public CommandBase SaveImageCommand { get; private set; }
+        public CommandBase CountPixelCommand { get; private set; }
 
         private WriteableBitmap _image;
         public WriteableBitmap Image
         {
             get { return _image; }
             set { SetProperty(ref _image, value); }
+        }
+
+        private WriteableBitmap _counterImage;
+        public WriteableBitmap CounterImage
+        {
+            get { return _counterImage; }
+            set { SetProperty(ref _counterImage, value); }
         }
 
         private double _imageTemplateWidth = 400;
@@ -37,6 +52,21 @@ namespace ImageCenterFinder.ViewModel
             get { return _imageTemplateHeight; }
             set { SetProperty(ref _imageTemplateHeight, value); }
         }
+
+        private double _counterImageTemplateWidth = 400;
+        public double CounterImageTemplateWidth
+        {
+            get { return _counterImageTemplateWidth; }
+            set { SetProperty(ref _counterImageTemplateWidth, value); }
+        }
+
+        private double _counterImageTemplateHeight = 400;
+        public double CounterImageTemplateHeight
+        {
+            get { return _counterImageTemplateHeight; }
+            set { SetProperty(ref _counterImageTemplateHeight, value); }
+        }
+
 
         private string _xCenter;
         public string XCenter
@@ -66,6 +96,55 @@ namespace ImageCenterFinder.ViewModel
             set { SetProperty(ref _mouseY, value); }
         }
 
+        private string _mouseR;
+        public string MouseR
+        {
+            get { return _mouseR; }
+            set { SetProperty(ref _mouseR, value); }
+        }
+
+        private string _mouseG;
+        public string MouseG
+        {
+            get { return _mouseG; }
+            set { SetProperty(ref _mouseG, value); }
+        }
+
+        private string _mouseB;
+        public string MouseB
+        {
+            get { return _mouseB; }
+            set { SetProperty(ref _mouseB, value); }
+        }
+
+        private int _inputR = 0;
+        public int InputR
+        {
+            get { return _inputR; }
+            set { SetProperty(ref _inputR, value); }
+        }
+
+        private int _inputG = 0;
+        public int InputG
+        {
+            get { return _inputG; }
+            set { SetProperty(ref _inputG, value); }
+        }
+
+        private int _inputB = 0;
+        public int InputB
+        {
+            get { return _inputB; }
+            set { SetProperty(ref _inputB, value); }
+        }
+
+        private int _countedPixel;
+        public int CountedPixel
+        {
+            get { return _countedPixel; }
+            set { SetProperty(ref _countedPixel, value); }
+        }
+
         private double _distance = 0;
         public double Distance
         {
@@ -79,6 +158,7 @@ namespace ImageCenterFinder.ViewModel
         {
             LoadImageCommand = new CommandBase(LoadImage);
             SaveImageCommand = new CommandBase(SaveImage, DoesImageExist);
+            CountPixelCommand = new CommandBase(CountPixel);
         }
 
         private void LoadImage(object sender)
@@ -91,7 +171,14 @@ namespace ImageCenterFinder.ViewModel
 
             if(openFile.ShowDialog() == true)
             {
-                ComputeImageCenter(new BitmapImage(new Uri(openFile.FileName, UriKind.Absolute)));
+                if(CurrentTab == (int)TabType.ImageCenterFinder)
+                {
+                    ComputeImageCenter(new BitmapImage(new Uri(openFile.FileName, UriKind.Absolute)));
+                }
+                else if(CurrentTab == (int)TabType.ColorPixelCounter)
+                {
+                    PrintImageInPixelCounterCanvas(new BitmapImage(new Uri(openFile.FileName, UriKind.Absolute)));
+                }
             }
         }
 
@@ -126,7 +213,7 @@ namespace ImageCenterFinder.ViewModel
                 }
             }
         }
-
+        //=============================================================================================
         private void ComputeImageCenter(BitmapImage image)
         {
             int bytesPerPixel = image.Format.BitsPerPixel / 8;
@@ -239,7 +326,71 @@ namespace ImageCenterFinder.ViewModel
             result.y = (int)(yTotal / (ulong)pixelCount);
             return result;
         }
+        //=============================================================================================
+        private void PrintImageInPixelCounterCanvas(BitmapImage image)
+        {
+            int bytesPerPixel = image.Format.BitsPerPixel / 8;
+            int stride = image.PixelWidth * bytesPerPixel;
+            int size = image.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            image.CopyPixels(pixels, stride, 0);
 
+            WriteableBitmap wrBmp = new WriteableBitmap(image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY, PixelFormats.Bgra32, null);
+            wrBmp.WritePixels(new Int32Rect(0, 0, image.PixelWidth, image.PixelHeight), pixels, stride, 0);
+
+            CounterImage = wrBmp;
+            CounterImageTemplateWidth = image.PixelWidth;
+            CounterImageTemplateHeight = image.PixelHeight;
+        }
+
+        private void GetPixelColorOfLoadedImage(int x, int y)
+        {
+            int bytesPerPixel = CounterImage.Format.BitsPerPixel / 8;
+            int stride = CounterImage.PixelWidth * bytesPerPixel;
+            int size = CounterImage.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            CounterImage.CopyPixels(pixels, stride, 0);
+
+            byte alpha = pixels[y * stride + x * bytesPerPixel + 3];
+            if(alpha > 0)
+            {
+                MouseB = pixels[y * stride + x * bytesPerPixel + 0].ToString();
+                MouseG = pixels[y * stride + x * bytesPerPixel + 1].ToString();
+                MouseR = pixels[y * stride + x * bytesPerPixel + 2].ToString();
+            }
+            else
+            {
+                MouseB = "-";
+                MouseG = "-";
+                MouseR = "-";
+            }
+        }
+
+        private void CountPixel(object sender)
+        {
+            int bytesPerPixel = CounterImage.Format.BitsPerPixel / 8;
+            int stride = CounterImage.PixelWidth * bytesPerPixel;
+            int size = CounterImage.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            CounterImage.CopyPixels(pixels, stride, 0);
+
+            int count = 0;
+            for(var i=0; i<CounterImage.PixelHeight; i++)
+            {
+                for(var j=0; j<CounterImage.PixelWidth; j++)
+                {
+                    if(pixels[i * stride + j * bytesPerPixel + 3] > 0
+                       && pixels[i * stride + j * bytesPerPixel + 0] == InputB
+                       && pixels[i * stride + j * bytesPerPixel + 1] == InputG
+                       && pixels[i * stride + j * bytesPerPixel + 2] == InputR)
+                    {
+                        count++;
+                    }
+                }
+            }
+            CountedPixel = count;
+        }
+        //=============================================================================================
         public event EventHandler Capture;
         public event EventHandler Release;
 
@@ -249,17 +400,30 @@ namespace ImageCenterFinder.ViewModel
 
         public void OnMouseMove(object sender, MouseCaptureArgs e)
         {
-            if (!isCenterComputed)
-                return;
-
-            MouseX = (e.X / ImageTemplateWidth * Image.PixelWidth).ToString();
-            MouseY = (e.Y / ImageTemplateHeight * Image.PixelHeight).ToString();
-
-            if(isCenterComputed)
+            if(CurrentTab == (int)TabType.ImageCenterFinder)
             {
-                double xDiff = Convert.ToDouble(MouseX) - Convert.ToDouble(XCenter);
-                double yDiff = Convert.ToDouble(MouseY) - Convert.ToDouble(YCenter);
-                Distance = Math.Round(Math.Sqrt(xDiff * xDiff + yDiff * yDiff), 2);
+                if (!isCenterComputed)
+                    return;
+
+                MouseX = (Math.Round(e.X) / ImageTemplateWidth * Image.PixelWidth).ToString();
+                MouseY = (Math.Round(e.Y) / ImageTemplateHeight * Image.PixelHeight).ToString();
+
+                if (isCenterComputed)
+                {
+                    double xDiff = Convert.ToDouble(MouseX) - Convert.ToDouble(XCenter);
+                    double yDiff = Convert.ToDouble(MouseY) - Convert.ToDouble(YCenter);
+                    Distance = Math.Round(Math.Sqrt(xDiff * xDiff + yDiff * yDiff), 2);
+                }
+            }
+            else if(CurrentTab == (int)TabType.ColorPixelCounter)
+            {
+                if (CounterImage == null)
+                    return;
+
+                MouseX = (Math.Round(e.X) / CounterImageTemplateWidth * CounterImage.PixelWidth).ToString();
+                MouseY = (Math.Round(e.Y) / CounterImageTemplateHeight * CounterImage.PixelHeight).ToString();
+
+                GetPixelColorOfLoadedImage((int)(Math.Round(e.X) / CounterImageTemplateWidth * CounterImage.PixelWidth), (int)(Math.Round(e.Y) / CounterImageTemplateHeight * CounterImage.PixelHeight));
             }
         }
 

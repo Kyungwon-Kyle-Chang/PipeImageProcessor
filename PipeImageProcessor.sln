@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageCenterFinder", "ImageCenterFinder\ImageCenterFinder.csproj", "{863466F4-891A-4E27-BC76-74DFC388BF93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeImageProcessor", "ImageCenterFinder\PipeImageProcessor.csproj", "{863466F4-891A-4E27-BC76-74DFC388BF93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

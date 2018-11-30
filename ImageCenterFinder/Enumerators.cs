@@ -1,0 +1,5 @@
+﻿enum TabType
+{
+    ImageCenterFinder,
+    ColorPixelCounter
+}

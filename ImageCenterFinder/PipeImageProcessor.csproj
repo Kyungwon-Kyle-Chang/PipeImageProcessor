@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="BindableBase.cs" />
     <Compile Include="CommandBase.cs" />
+    <Compile Include="Enumerators.cs" />
     <Compile Include="IMouseCaptureProxy.cs" />
     <Compile Include="MouseCaptureArgs.cs" />
     <Compile Include="MouseCaptureBehavior.cs" />

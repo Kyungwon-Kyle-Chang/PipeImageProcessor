@@ -7,41 +7,88 @@
         xmlns:viewmodel="clr-namespace:ImageCenterFinder.ViewModel"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="MainWindow" Height="466.713" Width="633.911">
+        Title="Pipe Image Processor" Height="800" Width="1200">
     <Window.DataContext>
         <viewmodel:MainWindowViewModel/>
     </Window.DataContext>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="200"/>
-        </Grid.ColumnDefinitions>
+        <TabControl Canvas.Left="127" Canvas.Top="35" Grid.ColumnSpan="2" SelectedIndex="{Binding CurrentTab, Mode=OneWayToSource}">
+            <TabItem Header="Image Center Finder">
+                <Grid Background="#FFFFFFFF">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
 
-        <Image Margin="10,10,0,0" Source="{Binding Image}" Width="{Binding ImageTemplateWidth}" Height="{Binding ImageTemplateHeight}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="10,10,16,27"/>
-        <Canvas Background="Transparent" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ImageTemplateWidth}" Height="{Binding ImageTemplateHeight}">
-            <i:Interaction.Behaviors>
-                <local:MouseCaptureBehavior Proxy="{Binding}"/>
-            </i:Interaction.Behaviors>
-        </Canvas>
-        <Button Content="이미지 불러오기" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="180" Command="{Binding LoadImageCommand}" Grid.Column="1"/>
-        <Button Content="저장" HorizontalAlignment="Left" Height="26" Margin="10,384,0,0" VerticalAlignment="Top" Width="180" Command="{Binding SaveImageCommand}" Grid.Column="1"/>
+                    <Image Margin="10,10,0,0" Source="{Binding Image}" Width="{Binding ImageTemplateWidth}" Height="{Binding ImageTemplateHeight}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,10,16,27"/>
+                    <Canvas Background="Transparent" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ImageTemplateWidth}" Height="{Binding ImageTemplateHeight}">
+                        <i:Interaction.Behaviors>
+                            <local:MouseCaptureBehavior Proxy="{Binding}"/>
+                        </i:Interaction.Behaviors>
+                    </Canvas>
+                    <Button Content="이미지 불러오기" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="180" Command="{Binding LoadImageCommand}" Grid.Column="1"/>
+                    <Button Content="저장" HorizontalAlignment="Left" Height="26" Margin="10,384,0,0" VerticalAlignment="Top" Width="180" Command="{Binding SaveImageCommand}" Grid.Column="1"/>
 
-        <GroupBox Header="중심점" HorizontalAlignment="Left" Height="106" Margin="10,45,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,77,0,0" TextWrapping="Wrap" Text="X : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
-        <TextBox HorizontalAlignment="Left" Height="28" Margin="61,74,0,0" TextWrapping="Wrap" Text="{Binding XCenter}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,110,0,0" TextWrapping="Wrap" Text="Y : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
-        <TextBox HorizontalAlignment="Left" Height="28" Margin="61,107,0,0" TextWrapping="Wrap" Text="{Binding YCenter}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <GroupBox Header="중심점" HorizontalAlignment="Left" Height="106" Margin="10,45,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,77,0,0" TextWrapping="Wrap" Text="X : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,74,0,0" TextWrapping="Wrap" Text="{Binding XCenter}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,110,0,0" TextWrapping="Wrap" Text="Y : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,107,0,0" TextWrapping="Wrap" Text="{Binding YCenter}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
 
-        <GroupBox Header="마우스 포인터" HorizontalAlignment="Left" Height="106" Margin="10,156,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,187,0,0" TextWrapping="Wrap" Text="X : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
-        <TextBox HorizontalAlignment="Left" Height="28" Margin="61,184,0,0" TextWrapping="Wrap" Text="{Binding MouseX}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,220,0,0" TextWrapping="Wrap" Text="Y : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
-        <TextBox HorizontalAlignment="Left" Height="28" Margin="61,217,0,0" TextWrapping="Wrap" Text="{Binding MouseY}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
-        <GroupBox Header="중심점과 거리" HorizontalAlignment="Left" Height="69" Margin="10,267,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
-        <TextBox HorizontalAlignment="Left" Height="28" Margin="31,292,0,0" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Width="87" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Height="19" Margin="132,295,0,0" TextWrapping="Wrap" Text="pixel(s)" VerticalAlignment="Top" Width="54" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <GroupBox Header="마우스 포인터" HorizontalAlignment="Left" Height="106" Margin="10,156,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,187,0,0" TextWrapping="Wrap" Text="X : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,184,0,0" TextWrapping="Wrap" Text="{Binding MouseX}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,220,0,0" TextWrapping="Wrap" Text="Y : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,217,0,0" TextWrapping="Wrap" Text="{Binding MouseY}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <GroupBox Header="중심점과 거리" HorizontalAlignment="Left" Height="69" Margin="10,267,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="31,292,0,0" TextWrapping="Wrap" Text="{Binding Distance}" IsReadOnly="True" VerticalAlignment="Top" Width="87" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="132,295,0,0" TextWrapping="Wrap" Text="pixel(s)" VerticalAlignment="Top" Width="54" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Color Pixel Counter">
+                <Grid Background="#FFFFFFFF">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
 
+                    <GroupBox Header="RGBA 픽셀 찾기" HorizontalAlignment="Left" Height="239" Margin="10,314,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+
+                    <Image Margin="10,10,0,0" Source="{Binding CounterImage}" Width="{Binding CounterImageTemplateWidth}" Height="{Binding CounterImageTemplateHeight}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,10,16,27"/>
+                    <Canvas Background="Transparent" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding CounterImageTemplateWidth}" Height="{Binding CounterImageTemplateHeight}">
+                        <i:Interaction.Behaviors>
+                            <local:MouseCaptureBehavior local:MouseCaptureBehavior.Proxy="{Binding}"/>
+                        </i:Interaction.Behaviors>
+                    </Canvas>
+                    <Button Content="이미지 불러오기" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="180" Command="{Binding LoadImageCommand}" Grid.Column="1"/>
+                    <Button Content="확인" HorizontalAlignment="Left" Height="26" Margin="35,507,0,0" VerticalAlignment="Top" Width="130" Command="{Binding CountPixelCommand}" Grid.Column="1"/>
+
+                    <GroupBox Header="마우스 포인터" HorizontalAlignment="Left" Height="106" Margin="10,52,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,83,0,0" TextWrapping="Wrap" Text="X : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,80,0,0" TextWrapping="Wrap" Text="{Binding MouseX}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,116,0,0" TextWrapping="Wrap" Text="Y : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,113,0,0" TextWrapping="Wrap" Text="{Binding MouseY}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+
+                    <GroupBox Header="마우스포인터 RGB" HorizontalAlignment="Left" Height="146" Margin="10,163,0,0" VerticalAlignment="Top" Width="180" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,196,0,0" TextWrapping="Wrap" Text="R : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,193,0,0" TextWrapping="Wrap" Text="{Binding MouseR}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,229,0,0" TextWrapping="Wrap" Text="G : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,226,0,0" TextWrapping="Wrap" Text="{Binding MouseG}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,262,0,0" TextWrapping="Wrap" Text="B : " VerticalAlignment="Top" Width="25" Grid.Column="1" RenderTransformOrigin="0.339,0.41"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,259,0,0" TextWrapping="Wrap" Text="{Binding MouseB}" IsReadOnly="True" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,348,0,0" TextWrapping="Wrap" Text="R : " VerticalAlignment="Top" Width="25" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,345,0,0" TextWrapping="Wrap" Text="{Binding InputR}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,381,0,0" TextWrapping="Wrap" Text="G : " VerticalAlignment="Top" Width="25" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,378,0,0" TextWrapping="Wrap" Text="{Binding InputG}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,414,0,0" TextWrapping="Wrap" Text="B : " VerticalAlignment="Top" Width="25" Grid.Column="1" RenderTransformOrigin="0.339,0.41"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="61,411,0,0" TextWrapping="Wrap" Text="{Binding InputB}" VerticalAlignment="Top" Width="104" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="19" Margin="31,470,0,0" TextWrapping="Wrap" Text="픽셀 수 : " VerticalAlignment="Top" Width="68" RenderTransformOrigin="0.789,-0.217" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="28" Margin="104,467,0,0" TextWrapping="Wrap" Text="{Binding CountedPixel}" IsReadOnly="True" VerticalAlignment="Top" Width="61" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
